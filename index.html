@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audioguia Exposição Legislativo Itajaí</title>
+  <meta name="description" content="Protótipo de audioguia web para a exposição da história do Legislativo de Itajaí." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=boska@400,500&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+      --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-12: 3rem; --space-16: 4rem;
+      --color-bg: #f7f6f2; --color-surface: #f9f8f5; --color-surface-2:#fbfbf9; --color-border:#d4d1ca; --color-divider:#dcd9d5;
+      --color-text:#28251d; --color-text-muted:#67655f; --color-text-faint:#8d8a84; --color-text-inverse:#f9f8f4;
+      --color-primary:#01696f; --color-primary-hover:#0c4e54; --color-primary-highlight:#cedcd8;
+      --shadow-sm: 0 1px 2px rgba(24,24,24,.06); --shadow-md: 0 10px 30px rgba(24,24,24,.08);
+      --radius-sm: .375rem; --radius-md:.75rem; --radius-lg:1rem; --radius-xl:1.25rem; --radius-full:9999px;
+      --font-display:'Boska', Georgia, serif; --font-body:'Satoshi', Inter, sans-serif;
+      --transition:180ms cubic-bezier(0.16,1,0.3,1);
+    }
+    [data-theme="dark"] {
+      --color-bg:#171614; --color-surface:#1c1b19; --color-surface-2:#201f1d; --color-border:#393836; --color-divider:#262523;
+      --color-text:#ece9e2; --color-text-muted:#b4b0a9; --color-text-faint:#8d8881; --color-text-inverse:#171614;
+      --color-primary:#4f98a3; --color-primary-hover:#227f8b; --color-primary-highlight:#313b3b;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.25); --shadow-md:0 10px 30px rgba(0,0,0,.35);
+    }
+    *,. *::before,*::after{box-sizing:border-box}
+    *{margin:0;padding:0}
+    html{-webkit-text-size-adjust:none;text-size-adjust:none;scroll-behavior:smooth}
+    body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;background:var(--color-bg);color:var(--color-text)}
+    img,svg{display:block;max-width:100%}
+    button,input,a{font:inherit;color:inherit}
+    button{cursor:pointer;border:none;background:none}
+    a{text-decoration:none}
+    :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .page{max-width:760px;margin:0 auto;padding:var(--space-4);padding-bottom:7rem}
+    .skip-link{position:absolute;left:-9999px;top:auto}.skip-link:focus{left:var(--space-4);top:var(--space-4);z-index:1000;background:var(--color-primary);color:var(--color-text-inverse);padding:.75rem 1rem;border-radius:var(--radius-full)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding-top:var(--space-4);margin-bottom:var(--space-8)}
+    .brand{display:flex;align-items:center;gap:var(--space-3)}
+    .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary-highlight),transparent), var(--color-surface);border:1px solid var(--color-border);display:grid;place-items:center;color:var(--color-primary);box-shadow:var(--shadow-sm)}
+    .brand-text small{display:block;font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.08em}
+    .brand-text strong{display:block;font-size:var(--text-sm);font-weight:700}
+    .theme-toggle{width:44px;height:44px;border:1px solid var(--color-border);border-radius:var(--radius-full);background:var(--color-surface)}
+    .hero{padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm);margin-bottom:var(--space-6)}
+    .eyebrow{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.12em;color:var(--color-primary);margin-bottom:var(--space-3)}
+    h1{font-family:var(--font-display);font-size:var(--text-2xl);line-height:1.05;margin-bottom:var(--space-4)}
+    .hero p{color:var(--color-text-muted);max-width:58ch}
+    .welcome{display:grid;gap:var(--space-4);margin-top:var(--space-6)}
+    .cta{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 1.2rem;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-text-inverse);font-weight:700;box-shadow:var(--shadow-sm);transition:transform var(--transition), background var(--transition)}
+    .cta:hover,.cta:focus-visible{background:var(--color-primary-hover)}
+    .hint{font-size:var(--text-sm);color:var(--color-text-muted)}
+    .steps,.playlist,.player,.transcript{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
+    .steps,.playlist,.player,.transcript{padding:var(--space-5);margin-top:var(--space-5)}
+    h2{font-size:var(--text-lg);margin-bottom:var(--space-3)}
+    .steps ol{display:grid;gap:var(--space-3);padding-left:1.2rem;color:var(--color-text-muted)}
+    .track-list{display:grid;gap:var(--space-3);list-style:none}
+    .track-btn{width:100%;text-align:left;padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface-2);display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-4);align-items:center;transition:border-color var(--transition), background var(--transition), transform var(--transition)}
+    .track-btn:hover,.track-btn:focus-visible{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+    .track-btn[aria-current="true"]{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+    .track-no{width:2.2rem;height:2.2rem;border-radius:50%;display:grid;place-items:center;background:var(--color-surface);border:1px solid var(--color-border);font-size:var(--text-sm);font-weight:700}
+    .track-meta strong{display:block;font-size:var(--text-base)}
+    .track-meta span{display:block;font-size:var(--text-sm);color:var(--color-text-muted)}
+    .track-duration{font-size:var(--text-sm);color:var(--color-text-faint)}
+    .player-card{display:grid;gap:var(--space-4)}
+    .player-label{font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--color-primary)}
+    .player-title{font-size:var(--text-xl);line-height:1.1}
+    .player-subtitle{color:var(--color-text-muted)}
+    .controls{display:grid;grid-template-columns:auto 1fr;gap:var(--space-4);align-items:center}
+    .play-btn{width:72px;height:72px;border-radius:50%;background:var(--color-primary);color:var(--color-text-inverse);display:grid;place-items:center;box-shadow:var(--shadow-md)}
+    .progress-wrap{display:grid;gap:var(--space-2)}
+    .time-row{display:flex;justify-content:space-between;font-size:var(--text-sm);color:var(--color-text-muted)}
+    input[type="range"]{width:100%;accent-color:var(--color-primary)}
+    .secondary-actions{display:flex;gap:var(--space-3);flex-wrap:wrap}
+    .ghost{min-height:44px;padding:.75rem 1rem;border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface-2)}
+    .transcript[hidden]{display:none}
+    .transcript p{color:var(--color-text-muted)}
+    .footer-note{margin-top:var(--space-6);font-size:var(--text-sm);color:var(--color-text-faint);text-align:center}
+    @media (max-width:640px){
+      .page{padding:var(--space-3);padding-bottom:8rem}
+      .hero,.steps,.playlist,.player,.transcript{padding:var(--space-4)}
+      .controls{grid-template-columns:1fr;}
+      .play-btn{width:100%;height:56px;border-radius:var(--radius-full)}
+      .track-btn{grid-template-columns:auto 1fr}
+      .track-duration{grid-column:2}
+    }
+    @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;transition:none!important}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="page">
+    <header class="topbar" aria-label="Cabeçalho da audioguia">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Símbolo da audioguia">
+            <path d="M4 18h16"/>
+            <path d="M7 18V8l5-3 5 3v10"/>
+            <path d="M10 11h4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <small>Audioguia</small>
+          <strong>Legislativo de Itajaí</strong>
+        </div>
+      </div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Alternar tema">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" aria-labelledby="titulo-principal">
+        <p class="eyebrow">Exposição presencial</p>
+        <h1 id="titulo-principal">Ouça e volte o olhar para a exposição.</h1>
+        <p>Escaneie uma vez, toque para iniciar e acompanhe os principais marcos da história do Legislativo de Itajaí com áudios curtos e discretos.</p>
+        <div class="welcome">
+          <button class="cta" id="startGuide" type="button">Iniciar audioguia</button>
+          <p class="hint">Use fones de ouvido, se possível. Depois de iniciar, escolha a faixa correspondente ao painel.</p>
+        </div>
+      </section>
+
+      <section class="steps" aria-labelledby="como-usar">
+        <h2 id="como-usar">Como usar</h2>
+        <ol>
+          <li>Toque em <strong>Iniciar audioguia</strong> para liberar o áudio no seu celular.</li>
+          <li>Escolha a faixa pelo número e pelo título do painel.</li>
+          <li>Toque em play e volte a atenção para a exposição.</li>
+        </ol>
+      </section>
+
+      <section class="playlist" aria-labelledby="lista-faixas">
+        <h2 id="lista-faixas">Faixas</h2>
+        <ul class="track-list" id="trackList"></ul>
+      </section>
+
+      <section class="player" aria-labelledby="tocando-agora">
+        <div class="player-card">
+          <div>
+            <p class="player-label">Tocando agora</p>
+            <h2 class="player-title" id="tocando-agora">Selecione uma faixa</h2>
+            <p class="player-subtitle" id="playerSubtitle">O áudio começa após o seu toque no botão de reprodução.</p>
+          </div>
+          <audio id="audio" preload="none"></audio>
+          <div class="controls">
+            <button class="play-btn" id="playPause" type="button" aria-label="Reproduzir faixa selecionada">
+              <svg id="playIcon" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+            </button>
+            <div class="progress-wrap">
+              <div class="time-row"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+              <label for="progress" class="sr-only">Progresso do áudio</label>
+              <input id="progress" type="range" min="0" max="100" value="0" />
+            </div>
+          </div>
+          <div class="secondary-actions">
+            <button class="ghost" id="toggleTranscript" type="button" aria-expanded="false">Ver transcrição</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="transcript" id="transcriptBox" aria-labelledby="titulo-transcricao" hidden>
+        <h2 id="titulo-transcricao">Transcrição</h2>
+        <p id="transcriptText">Selecione uma faixa para visualizar o texto correspondente.</p>
+      </section>
+
+      <p class="footer-note">Protótipo funcional para teste em celular no espaço expositivo.</p>
+    </main>
+  </div>
+
+  <script>
+    const tracks = [
+      {
+        number: '01',
+        title: 'Abertura da exposição',
+        duration: '0:40',
+        file: './assets/faixa-01-abertura.mp3',
+        transcript: 'Bem-vindo à audioguia da exposição sobre a história do Legislativo de Itajaí. Neste percurso, você vai acompanhar momentos em que a Câmara esteve ligada à formação do município, à organização da vida pública e às transformações da cidade ao longo do tempo. A proposta desta escuta é simples: ouvir brevemente e voltar o olhar para os painéis da exposição.'
+      },
+      {
+        number: '02',
+        title: 'Das origens à instalação da Câmara',
+        duration: '0:55',
+        file: './assets/faixa-02-origens-e-instalacao.mp3',
+        transcript: 'A história começa antes da instalação formal da Câmara. Em 1833, a criação da Freguesia do Santíssimo Sacramento marcou um passo importante na formação institucional do território. Em 1859, Itajaí conquistou autonomia administrativa como município. No ano seguinte, em 15 de junho de 1860, ocorreu a instalação oficial do município e o início das atividades da Câmara de Vereadores. É desse marco que se desenvolve a trajetória política apresentada nesta linha do tempo.'
+      },
+      {
+        number: '03',
+        title: 'República e ruptura institucional',
+        duration: '0:48',
+        file: './assets/faixa-03-republica-e-ruptura.mp3',
+        transcript: 'Em 1889, a Proclamação da República alterou profundamente a estrutura política local. A Câmara foi dissolvida e substituída pelo Conselho da Intendência. Pouco depois, a Revolução Federalista atingiu Itajaí e trouxe instabilidade para a vida pública da cidade. Este painel mostra que a história do Legislativo não foi linear: ela também passou por interrupções, conflitos e reconstruções.'
+      },
+      {
+        number: '04',
+        title: 'Infraestrutura e modernização',
+        duration: '0:57',
+        file: './assets/faixa-04-modernizacao-urbana.mp3',
+        transcript: 'No fim do século dezenove e no começo do século vinte, Itajaí entrou em uma fase de modernização urbana. Em 1897, foi inaugurado o sistema de água encanada para a área central. Ao longo das décadas seguintes, temas como vias públicas, serviços urbanos, iluminação e expansão administrativa ganharam força. Em 1925, a inauguração do Palacete Municipal, hoje Palácio Marcos Konder, consolidou um símbolo importante da vida institucional da cidade.'
+      },
+      {
+        number: '05',
+        title: 'Educação e cultura',
+        duration: '0:53',
+        file: './assets/faixa-05-educacao-e-cultura.mp3',
+        transcript: 'Na década de 1960, a atuação legislativa também aparece ligada à formação educacional e cultural de Itajaí. Em 1964, os vereadores aprovaram a municipalização dos cursos superiores de Filosofia e Direito. Em 1968, foi criada a autarquia de Educação e Cultura, fortalecendo a estrutura pública voltada ao ensino superior e às ações culturais. Este trecho da exposição mostra como o Legislativo também ajudou a construir bases duradouras para a vida intelectual da cidade.'
+      }
+    ];
+
+    const trackList = document.getElementById('trackList');
+    const audio = document.getElementById('audio');
+    const playPause = document.getElementById('playPause');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const titleEl = document.getElementById('tocando-agora');
+    const subtitleEl = document.getElementById('playerSubtitle');
+    const transcriptText = document.getElementById('transcriptText');
+    const transcriptBox = document.getElementById('transcriptBox');
+    const toggleTranscript = document.getElementById('toggleTranscript');
+    const startGuide = document.getElementById('startGuide');
+    const playIcon = document.getElementById('playIcon');
+    let currentTrack = null;
+    let isUnlocked = false;
+
+    function formatTime(value) {
+      if (!Number.isFinite(value)) return '0:00';
+      const minutes = Math.floor(value / 60);
+      const seconds = Math.floor(value % 60).toString().padStart(2, '0');
+      return `${minutes}:${seconds}`;
+    }
+
+    function updatePlayIcon(isPlaying) {
+      playIcon.innerHTML = isPlaying
+        ? '<path d="M8 5h3v14H8z"></path><path d="M13 5h3v14h-3z"></path>'
+        : '<path d="M8 5v14l11-7z"></path>';
+      playPause.setAttribute('aria-label', isPlaying ? 'Pausar reprodução' : 'Reproduzir faixa selecionada');
+    }
+
+    function renderTracks() {
+      trackList.innerHTML = tracks.map((track, index) => `
+        <li>
+          <button class="track-btn" type="button" data-index="${index}" aria-current="false">
+            <span class="track-no">${track.number}</span>
+            <span class="track-meta"><strong>${track.title}</strong><span>Faixa ${track.number}</span></span>
+            <span class="track-duration">${track.duration}</span>
+          </button>
+        </li>
+      `).join('');
+    }
+
+    function setActiveButton(index) {
+      document.querySelectorAll('.track-btn').forEach((btn, i) => {
+        btn.setAttribute('aria-current', i === index ? 'true' : 'false');
+      });
+    }
+
+    function selectTrack(index, autoplay = false) {
+      currentTrack = tracks[index];
+      audio.src = currentTrack.file;
+      titleEl.textContent = currentTrack.title;
+      subtitleEl.textContent = `Faixa ${currentTrack.number} · duração aproximada ${currentTrack.duration}`;
+      transcriptText.textContent = currentTrack.transcript;
+      setActiveButton(index);
+      progress.value = 0;
+      currentTimeEl.textContent = '0:00';
+      durationEl.textContent = currentTrack.duration;
+      if (autoplay && isUnlocked) {
+        audio.play().catch(() => {});
+      }
+    }
+
+    startGuide.addEventListener('click', async () => {
+      isUnlocked = true;
+      if (!currentTrack) selectTrack(0, false);
+      try {
+        await audio.play();
+        updatePlayIcon(true);
+      } catch (e) {
+        subtitleEl.textContent = 'Agora escolha uma faixa e toque novamente em play.';
+      }
+      startGuide.textContent = 'Audioguia iniciada';
+      startGuide.disabled = true;
+      startGuide.setAttribute('aria-disabled', 'true');
+    });
+
+    trackList.addEventListener('click', (event) => {
+      const button = event.target.closest('.track-btn');
+      if (!button) return;
+      const index = Number(button.dataset.index);
+      selectTrack(index, false);
+    });
+
+    playPause.addEventListener('click', async () => {
+      if (!currentTrack) selectTrack(0, false);
+      if (audio.paused) {
+        try {
+          await audio.play();
+          isUnlocked = true;
+        } catch (e) {}
+      } else {
+        audio.pause();
+      }
+    });
+
+    audio.addEventListener('play', () => updatePlayIcon(true));
+    audio.addEventListener('pause', () => updatePlayIcon(false));
+    audio.addEventListener('loadedmetadata', () => {
+      durationEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration) progress.value = (audio.currentTime / audio.duration) * 100;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+    progress.addEventListener('input', () => {
+      if (!audio.duration) return;
+      audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+    audio.addEventListener('ended', () => updatePlayIcon(false));
+
+    toggleTranscript.addEventListener('click', () => {
+      const expanded = toggleTranscript.getAttribute('aria-expanded') === 'true';
+      toggleTranscript.setAttribute('aria-expanded', String(!expanded));
+      transcriptBox.hidden = expanded;
+      toggleTranscript.textContent = expanded ? 'Ver transcrição' : 'Ocultar transcrição';
+    });
+
+    (function(){
+      const toggle=document.querySelector('[data-theme-toggle]');
+      const root=document.documentElement;
+      let theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+      root.setAttribute('data-theme', theme);
+      toggle.innerHTML = theme==='dark'
+        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      toggle.addEventListener('click',()=>{
+        theme=theme==='dark'?'light':'dark';
+        root.setAttribute('data-theme',theme);
+        toggle.setAttribute('aria-label','Alternar para tema '+(theme==='dark'?'claro':'escuro'));
+        toggle.innerHTML = theme==='dark'
+        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      });
+    })();
+
+    renderTracks();
+    selectTrack(0, false);
+  </script>
+</body>
+</html>
