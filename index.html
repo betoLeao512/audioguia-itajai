@@ -226,6 +226,7 @@
     const startGuide = document.getElementById('startGuide');
     const playIcon = document.getElementById('playIcon');
     const playLabel = document.getElementById('playLabel');
+    const playlistSection = document.querySelector('.playlist');
     let currentTrack = null;
     let isUnlocked = false;
 
@@ -240,7 +241,7 @@
       playIcon.innerHTML = isPlaying
         ? '<path d="M8 5h3v14H8z"></path><path d="M13 5h3v14h-3z"></path>'
         : '<path d="M8 5v14l11-7z"></path>';
-      playLabel.textContent = isPlaying ? 'Pausar faixa' : 'Tocar faixa';
+      if (playLabel) playLabel.textContent = isPlaying ? 'Pausar faixa' : 'Tocar faixa';
       playPause.setAttribute('aria-label', isPlaying ? 'Pausar reprodução' : 'Reproduzir faixa selecionada');
     }
 
@@ -277,25 +278,38 @@
       }
     }
 
+    function goToPlaylist() {
+      if (playlistSection) {
+        playlistSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     startGuide.addEventListener('click', async () => {
       isUnlocked = true;
       if (!currentTrack) selectTrack(0, false);
-      try {
-        await audio.play();
-        updatePlayIcon(true);
-      } catch (e) {
-        subtitleEl.textContent = 'Agora escolha uma faixa e toque novamente em play.';
-      }
       startGuide.textContent = 'Audioguia iniciada';
       startGuide.disabled = true;
       startGuide.setAttribute('aria-disabled', 'true');
+      subtitleEl.textContent = 'Escolha uma faixa abaixo. O botão de reprodução fica fixo no rodapé.';
+      goToPlaylist();
+      setTimeout(() => {
+        if (window.matchMedia('(max-width: 640px)').matches) {
+          playPause.focus({ preventScroll: true });
+        }
+      }, 450);
     });
 
-    trackList.addEventListener('click', (event) => {
+    trackList.addEventListener('click', async (event) => {
       const button = event.target.closest('.track-btn');
       if (!button) return;
       const index = Number(button.dataset.index);
+      isUnlocked = true;
       selectTrack(index, false);
+      try {
+        await audio.play();
+      } catch (e) {
+        subtitleEl.textContent = 'Toque no botão fixo no rodapé para iniciar a faixa.';
+      }
     });
 
     playPause.addEventListener('click', async () => {
